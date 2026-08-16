@@ -1336,6 +1336,12 @@ class Handler(BaseHTTPRequestHandler):
         try:
             entry = resolve_youtube_format18(video_id)
         except Exception as error:
+            print(
+                "[DIRECT RESOLVE ERROR]",
+                type(error).__name__,
+                str(error),
+                flush=True
+            )
             self.send_json({
                 "ok": False,
                 "tier": "direct",
@@ -1576,6 +1582,7 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+
 
 
 
