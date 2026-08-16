@@ -18,11 +18,17 @@ from pathlib import Path
 
 
 CONFIGURED_RESOLVER = os.environ.get("IMVU_YOUTUBE_RESOLVER", "").strip()
+script_path = Path(__file__).resolve()
+deep_output_resolver = (
+    script_path.parents[2] / "outputs" / "youtube_resolver"
+    if len(script_path.parents) > 2
+    else None
+)
 RESOLVER_DIRS = tuple(path for path in (
     Path(CONFIGURED_RESOLVER) if CONFIGURED_RESOLVER else None,
-    Path(__file__).resolve().with_name("youtube_resolver"),
-    Path(__file__).resolve().parents[2] / "outputs" / "youtube_resolver",
-    Path(__file__).resolve().parent.parent / "youtube_resolver",
+    script_path.with_name("youtube_resolver"),
+    deep_output_resolver,
+    script_path.parent.parent / "youtube_resolver",
 ) if path is not None)
 for resolver_dir in RESOLVER_DIRS:
     if resolver_dir.is_dir():
@@ -1570,5 +1576,6 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+
 
 
