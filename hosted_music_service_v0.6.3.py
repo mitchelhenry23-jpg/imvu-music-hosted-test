@@ -1589,7 +1589,30 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    try:
+        print("[YTDLP CHECK] starting provider discovery test", flush=True)
+        with YoutubeDL({
+            "verbose": True,
+            "skip_download": True,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["mweb"],
+                },
+            },
+        }) as ydl:
+            ydl.extract_info(
+                "https://www.youtube.com/watch?v=WPpDyIJdasg",
+                download=False,
+            )
+    except Exception as error:
+        print(
+            "[YTDLP CHECK ERROR]",
+            type(error).__name__,
+            str(error),
+            flush=True,
+        )
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+
 
 
 
