@@ -1556,7 +1556,9 @@ class Handler(BaseHTTPRequestHandler):
             "attemptedMethods": len(YOUTUBE_AUDIO_STRATEGIES),
             "at": datetime.now().isoformat(timespec="seconds"),
         })
-        record_bridge_error(video_id, " || ".join(failures) or "all YouTube strategies failed")
+        failure_summary = " || ".join(failures) or "all YouTube strategies failed"
+        print("[MP3 STRATEGY FAILURES]", failure_summary, flush=True)
+        record_bridge_error(video_id, failure_summary)
         if not self.wfile.closed:
             try:
                 self.send_json({
@@ -1612,6 +1614,7 @@ if __name__ == "__main__":
             flush=True,
         )
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+
 
 
 
