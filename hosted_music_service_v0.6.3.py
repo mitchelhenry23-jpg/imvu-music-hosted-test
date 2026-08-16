@@ -358,6 +358,14 @@ def resolve_youtube_format18(video_id):
         "socket_timeout": 25,
         "format": "18",
     }
+    # Render/datacenter test: use mweb so the installed
+    # bgutil PO-token provider can supply YouTube GVS tokens.
+    if os.environ.get("RENDER"):
+        options["extractor_args"] = {
+            "youtube": {
+                "player_client": ["mweb"],
+            },
+        }
     options.update(resolver_runtime_options())
     with YoutubeDL(options) as ydl:
         info = ydl.extract_info(
@@ -1582,6 +1590,7 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+
 
 
 
